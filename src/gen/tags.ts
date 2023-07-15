@@ -28,7 +28,8 @@ export class TestFileTags {
     this.addTestTags(key, tags);
   }
 
-  private getTestTags(parents: (Feature | Rule | Scenario)[], testTags: readonly Tag[]) {
+  //private 
+  getTestTags(parents: (Feature | Rule | Scenario)[], testTags: readonly Tag[]) {
     const tagNames = new Set<string>();
     parents
       .map((p) => p.tags)

@@ -147,7 +147,9 @@ export class TestFile {
     const lines: string[] = [];
     const newParents = [...parents, feature];
     feature.children.forEach((child) => lines.push(...this.getSuiteChild(child, newParents)));
-    return formatter.suite(feature.name, lines, flags);
+    // return formatter.suite(feature.name, lines, flags);
+    const tags = this.testFileTags.getTestTags(newParents, feature.tags).join(" ");
+    return formatter.suite(`${feature.name} ${tags}`, lines, flags);
   }
 
   private getSuiteChild(child: FeatureChild | RuleChild, parents: (Feature | Rule)[]) {
@@ -198,7 +200,9 @@ export class TestFile {
         lines.push(...testLines);
       });
     });
-    return formatter.suite(scenario.name, lines, flags);
+    // return formatter.suite(scenario.name, lines, flags);
+    const tags = this.testFileTags.getTestTags(newParents, scenario.tags).join(" ");
+    return formatter.suite(`${scenario.name} ${tags}`, lines, flags);
   }
 
   /**
@@ -215,8 +219,10 @@ export class TestFile {
     const flags = getFormatterFlags(examples);
     this.testFileTags.registerTestTags(parents, title, examples.tags);
     const { fixtures, lines } = this.getSteps(scenario, exampleRow.id);
-    return formatter.test(title, fixtures, lines, flags);
-  }
+    // return formatter.test(title, fixtures, lines, flags);
+    const tags = this.testFileTags.getTestTags(newParents, scenario.tags).join(" ");
+    return formatter.suite(`${scenario.name} ${tags}`, lines, flags);
+}
 
   /**
    * Generate test from Scenario
@@ -225,7 +231,9 @@ export class TestFile {
     this.testFileTags.registerTestTags(parents, scenario.name, scenario.tags);
     const flags = getFormatterFlags(scenario);
     const { fixtures, lines } = this.getSteps(scenario);
-    return formatter.test(scenario.name, fixtures, lines, flags);
+    //return formatter.test(scenario.name, fixtures, lines, flags);
+    const tags = this.testFileTags.getTestTags(parents, scenario.tags).join(" ");
+    return formatter.test(`${scenario.name} ${tags}`, fixtures, lines, flags);
   }
 
   /**
