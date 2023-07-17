@@ -5,6 +5,10 @@
 
 Run BDD tests with [Playwright](https://playwright.dev/) test runner.
 
+This is a fork of an interesting projectenabling cucumber feature files to be run on playwright's test runner (and in UI Mode) by generating playwright compatible files.  I really want to be able to use tags
+and don't mind them being appended to the generated files (as typically you don't see or work with them).  This package appends the tags on the feature, scenario, outline and outline example titles and makes it 
+easy to run by appending -g "tag(s)" to the npx playwright test command.  This also avoids the need to override the Scenario Outline Exmple rows to make them unique or give them better names.
+
 > Inspired by the issue in Playwright repo [microsoft/playwright#11975](https://github.com/microsoft/playwright/issues/11975)
 
 ## Contents
