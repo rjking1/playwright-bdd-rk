@@ -1,13 +1,12 @@
-# playwright-bdd
-[![lint](https://github.com/vitalets/playwright-bdd/actions/workflows/lint.yaml/badge.svg)](https://github.com/vitalets/playwright-bdd/actions/workflows/lint.yaml)
-[![test](https://github.com/vitalets/playwright-bdd/actions/workflows/test.yaml/badge.svg)](https://github.com/vitalets/playwright-bdd/actions/workflows/test.yaml)
-[![npm version](https://img.shields.io/npm/v/playwright-bdd)](https://www.npmjs.com/package/playwright-bdd)
+# playwright-bdd-rk
 
 Run BDD tests with [Playwright](https://playwright.dev/) test runner.
 
-This is a fork of an interesting projectenabling cucumber feature files to be run on playwright's test runner (and in UI Mode) by generating playwright compatible files.  I really want to be able to use tags
-and don't mind them being appended to the generated files (as typically you don't see or work with them).  This package appends the tags on the feature, scenario, outline and outline example titles and makes it 
-easy to run by appending -g "tag(s)" to the npx playwright test command.  This also avoids the need to override the Scenario Outline Exmple rows to make them unique or give them better names.
+This is a fork of https://github.com/vitalets/playwright-bdd with support for auto including tags on the end of title lines. Tags are appended to the generated files (as typically you don't see or work with them).  
+This package appends the tags on the feature, scenario, outline and outline example titles and makes it 
+easy to select tests by appending -g "tag(s)" to the npx playwright test command.  This enhancement also avoids the need to override the Scenario Outline Example row titles to ensure they have unique names.
+
+This project is experimental and under development and will hopefully be folded back into its parent project (maybe with its functionality being a commnd line option).
 
 > Inspired by the issue in Playwright repo [microsoft/playwright#11975](https://github.com/microsoft/playwright/issues/11975)
 
@@ -64,7 +63,7 @@ Such approach brings all the benefits of Playwright runner:
 Install from npm:
 
 ```
-npm i -D playwright-bdd
+npm i -D playwright-bdd-rk
 ```
 
 This package uses `@playwright/test` and `@cucumber/cucumber` as a peer dependencies, 
@@ -81,15 +80,15 @@ npx playwright install
 ```
 
 ## Get started
-You can follow steps below to setup playwright-bdd manually 
-or clone [playwright-bdd-example](https://github.com/vitalets/playwright-bdd-example)
+You can follow steps below to setup playwright-bdd-rk manually 
+or clone [playwright-bdd-rk-example](https://github.com/vitalets/playwright-bdd-rk-example)
 to quickly check how it works.
 
 1. Create the following Playwright config in the project root:
    ```js
    // playwright.config.js
    import { defineConfig } from '@playwright/test';
-   import { defineBddConfig } from 'playwright-bdd';
+   import { defineBddConfig } from 'playwright-bdd-rk';
 
    const testDir = defineBddConfig({
      paths: ['sample.feature'],
@@ -116,7 +115,7 @@ to quickly check how it works.
 3. Implement steps in `steps.js`:
    ```ts
    import { expect } from '@playwright/test';
-   import { createBdd } from 'playwright-bdd';
+   import { createBdd } from 'playwright-bdd-rk';
 
    const { Given, When, Then } = createBdd();
 
@@ -152,7 +151,7 @@ to quickly check how it works.
    ```
    <details>
      <summary>Report</summary>
-     <img width="80%" src="https://github.com/vitalets/playwright-bdd/assets/1473072/e327d97c-bc67-4ba2-8660-650f1c479c62"/>
+     <img width="80%" src="https://github.com/vitalets/playwright-bdd-rk/assets/1473072/e327d97c-bc67-4ba2-8660-650f1c479c62"/>
    </details>
 
 5. (Optional) Check out `.features-gen` directory to see what generated tests look like ;)
@@ -171,20 +170,20 @@ Typical CucumberJS options:
 
 See more options in [CucumberJS docs](https://github.com/cucumber/cucumber-js/blob/main/docs/configuration.md#options).
 
-> Note: Cucumber's option `requireModule: ['ts-node/register']` is not recommended for playwright-bdd. TypeScript compilation is performed with Playwright's built-in loader.
+> Note: Cucumber's option `requireModule: ['ts-node/register']` is not recommended for playwright-bdd-rk. TypeScript compilation is performed with Playwright's built-in loader.
 
-Special `playwright-bdd` options:
+Special `playwright-bdd-rk` options:
 | Name                 | Type       | Description
 |----------------------|------------|------------------------
 | `outputDir`          | `string`   | Directory to output generated test files. Default: `.features-gen` 
-| `importTestFrom`     | `string`   | Path to file that exports custom `test` to be used in generated files. Default: `playwright-bdd`
+| `importTestFrom`     | `string`   | Path to file that exports custom `test` to be used in generated files. Default: `playwright-bdd-rk`
 | `examplesTitleFormat`| `string`   | Title format for scenario outline examples in generated tests. Default: `Example #<_index_>`
 | `verbose`            | `boolean`  | Verbose output. Default: `false`
 
 Example configuration (CommonJS TypeScript project):
 ```ts
 import { defineConfig } from '@playwright/test';
-import { defineBddConfig } from 'playwright-bdd';
+import { defineBddConfig } from 'playwright-bdd-rk';
 
 const testDir = defineBddConfig({
   importTestFrom: 'fixtures.ts',
@@ -318,7 +317,7 @@ Playwright-style highlights:
 Example:
 
 ```ts
-import { createBdd } from 'playwright-bdd';
+import { createBdd } from 'playwright-bdd-rk';
 
 const { Given, When, Then } = createBdd();
 
@@ -336,8 +335,8 @@ To use [custom fixtures](https://playwright.dev/docs/test-fixtures#with-fixtures
 
 1. Define custom fixtures with `.extend()` and export `test` instance. For example, `fixtures.ts`:
     ```ts
-    // Note: import base from playwright-bdd, not from @playwright/test!
-    import { test as base } from 'playwright-bdd';
+    // Note: import base from playwright-bdd-rk, not from @playwright/test!
+    import { test as base } from 'playwright-bdd-rk';
 
     // custom fixture
     class MyPage {
@@ -357,7 +356,7 @@ To use [custom fixtures](https://playwright.dev/docs/test-fixtures#with-fixtures
     ```
 2. Pass custom `test` function to `createBdd()` and use customs fixtures in step definitions. For example, `steps.ts`:
     ```ts
-    import { createBdd } from 'playwright-bdd';
+    import { createBdd } from 'playwright-bdd-rk';
     import { test } from './fixtures';
 
     const { Given, When, Then } = createBdd(test);
@@ -377,7 +376,7 @@ To use [custom fixtures](https://playwright.dev/docs/test-fixtures#with-fixtures
     ```
    Generated files, before and after: 
     ```diff
-    -import { test } from "playwright-bdd";  
+    -import { test } from "playwright-bdd-rk";  
     +import { test } from "./fixtures.ts";  
     ```
 
@@ -428,7 +427,7 @@ Feature: Playwright site
 
 Custom `fixtures.ts`:
 ```ts
-import { test as base } from 'playwright-bdd';
+import { test as base } from 'playwright-bdd-rk';
 
 export const test = base.extend({
   viewport: async ({ $tags, viewport }, use) => {
@@ -440,19 +439,28 @@ export const test = base.extend({
 });
 ```
 
-Please note, that for now **Cucumber tags are not inserted into test titles** for Playwright. 
-This is done intentionally to keep test titles unchanged. Waiting for Playwright tags API, see [microsoft/playwright#23180](https://github.com/microsoft/playwright/issues/23180).
+This fork appends cucumber tags to test titles when generating the intermediate files. 
+This is done as there is no indication on when Playwright will directly support tags, see [microsoft/playwright#23180](https://github.com/microsoft/playwright/issues/23180).
 
-However, you can simply put Playwright tags into scenario name:
+This means that putting Playwright tags before a Feature, Scenario, Outline or Examples:
 ```gherkin
+@feature
 Feature: Playwright site
-    
-    Scenario: Check title @slow
+
+    @slow
+    Scenario: Check title
+      ...
+```
+will generate in the intermediate files (which should not be edited):
+```gherkin
+Feature: Playwright site @feature
+
+    Scenario: Check title @feature @slow
       ...
 ```
 
 #### Using `DataTables`
-Playwright-bdd provides full support of [`DataTables`](https://cucumber.io/docs/gherkin/reference/#data-tables).
+Playwright-bdd-rk provides full support of [`DataTables`](https://cucumber.io/docs/gherkin/reference/#data-tables).
 For example:
 ```gherkin
 Feature: Some feature
@@ -466,7 +474,7 @@ Feature: Some feature
 
 Step definition:
 ```ts
-import { createBdd } from 'playwright-bdd';
+import { createBdd } from 'playwright-bdd-rk';
 import { DataTable } from '@cucumber/cucumber';
 
 const { Given, When, Then } = createBdd();
@@ -491,13 +499,13 @@ Cucumber-style step definitions are compatible with CucumberJS:
 
 * import `Given`, `When`, `Then` from `@cucumber/cucumber` package
 * [use regular functions for steps](https://github.com/cucumber/cucumber-js/blob/main/docs/faq.md#the-world-instance-isnt-available-in-my-hooks-or-step-definitions) (not arrow functions!) 
-* use `World` from `playwright-bdd` to access Playwright API 
+* use `World` from `playwright-bdd-rk` to access Playwright API 
 
 Example (TypeScript):
 
 ```ts
 import { Given, When, Then } from '@cucumber/cucumber';
-import { World } from 'playwright-bdd';
+import { World } from 'playwright-bdd-rk';
 import { expect } from '@playwright/test';
 
 Given('I open url {string}', async function (this: World, url: string) {
@@ -514,7 +522,7 @@ Then('I see in title {string}', async function (this: World, keyword: string) {
 ```
 
 #### World
-Playwright-bdd extends [Cucumber World](https://github.com/cucumber/cucumber-js/blob/main/docs/support_files/world.md) with Playwright [built-in fixtures](https://playwright.dev/docs/test-fixtures#built-in-fixtures) and [testInfo](https://playwright.dev/docs/test-advanced#testinfo-object). Simply use `this.page` or `this.testInfo` in step definitions:
+Playwright-bdd-rk extends [Cucumber World](https://github.com/cucumber/cucumber-js/blob/main/docs/support_files/world.md) with Playwright [built-in fixtures](https://playwright.dev/docs/test-fixtures#built-in-fixtures) and [testInfo](https://playwright.dev/docs/test-advanced#testinfo-object). Simply use `this.page` or `this.testInfo` in step definitions:
 
 ```js
 import { Given, When, Then } from '@cucumber/cucumber';
@@ -524,24 +532,24 @@ Given('I open url {string}', async function (url) {
 });
 ```
 
-In TypeScript you should import `World` from `playwright-bdd` for proper typing:
+In TypeScript you should import `World` from `playwright-bdd-rk` for proper typing:
 ```ts
 import { Given, When, Then } from '@cucumber/cucumber';
-import { World } from 'playwright-bdd';
+import { World } from 'playwright-bdd-rk';
 
 Given('I open url {string}', async function (this: World, url: string) {
   await this.page.goto(url);
 });
 ```
 
-Check out [all available props of World](https://github.com/vitalets/playwright-bdd/blob/main/src/run/world.ts). 
+Check out [all available props of World](https://github.com/vitalets/playwright-bdd-rk/blob/main/src/run/world.ts). 
 
 #### Custom World
-To use Custom World you should inherit it from playwright-bdd `World` and pass to Cucumber's `setWorldConstructor`:
+To use Custom World you should inherit it from playwright-bdd-rk `World` and pass to Cucumber's `setWorldConstructor`:
 
 ```ts
 import { setWorldConstructor } from '@cucumber/cucumber';
-import { World, WorldOptions } from 'playwright-bdd';
+import { World, WorldOptions } from 'playwright-bdd-rk';
 
 export class CustomWorld extends World {
   myBaseUrl: string;
@@ -648,7 +656,7 @@ Feature: Playwright site
 
 To
 ```js
-import { test } from 'playwright-bdd';
+import { test } from 'playwright-bdd-rk';
 
 test.describe('Playwright site', () => {
 
@@ -664,7 +672,7 @@ test.describe('Playwright site', () => {
 **Phase 2: Run test files with Playwright runner**
 
 Playwright runner executes generated test files as it would normally do. 
-Playwright-bdd automatically provides Playwright API (`page`, `browser`, etc) in step definitions:
+Playwright-bdd-rk automatically provides Playwright API (`page`, `browser`, etc) in step definitions:
 
 ```js
 Given('I open url {string}', async ({ page }, url) => {
@@ -710,7 +718,7 @@ Currently there are some limitations:
 Please check out [CHANGELOG.md](CHANGELOG.md).
 
 ## Feedback
-Feel free to share your feedback in [issues](https://github.com/vitalets/playwright-bdd/issues).
+Feel free to share your feedback in [issues](https://github.com/vitalets/playwright-bdd-rk/issues).
 This way you will help Playwright team to proceed with BDD implementation in Playwright core.
 
 ## License
