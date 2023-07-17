@@ -220,8 +220,8 @@ export class TestFile {
     this.testFileTags.registerTestTags(parents, title, examples.tags);
     const { fixtures, lines } = this.getSteps(scenario, exampleRow.id);
     // return formatter.test(title, fixtures, lines, flags);
-    const tags = this.testFileTags.getTestTags(parents, scenario.tags).join(" ");
-    return formatter.test(`${scenario.name} ${tags}`, fixtures, lines, flags);
+    const tags = this.testFileTags.getTestTags(parents, examples.tags).join(" ");
+    return formatter.test(`${title} ${tags}`, fixtures, lines, flags);
 }
 
   /**
