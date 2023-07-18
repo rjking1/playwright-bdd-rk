@@ -58,7 +58,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rking1/playwright-bdd-rk.git"
+    "url": "git://github.com/rjking1/playwright-bdd-rk.git"
   },
   "keywords": [
     "playwright",
