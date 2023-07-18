@@ -16,7 +16,7 @@ export type Flags = {
 };
 
 export function fileHeader(uri: string, importTestFrom?: ImportTestFrom) {
-  const file = importTestFrom?.file || 'playwright-bdd';
+  const file = importTestFrom?.file || 'playwright-bdd-rk';
   let varName = importTestFrom?.varName || 'test';
   if (varName !== 'test') varName = `${varName} as test`;
   // prettier-ignore
