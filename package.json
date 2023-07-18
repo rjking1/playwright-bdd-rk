@@ -1,7 +1,7 @@
 {
   "name": "playwright-bdd-rk",
   "description": "BDD Testing with Playwright runner and CucumberJS with tag support",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "bin": {
     "bddgen": "./dist/gen/cli.js"
   },
