@@ -8,6 +8,14 @@ easy to select tests by appending -g "tag(s)" to the npx playwright test command
 
 This project is experimental and under development and will hopefully be folded back into its parent project (maybe with its functionality being a commnd line option).
 
+With version 1.0.2 bddgen can be passed a logical expression of tags, for example
+
+`npx bddgen "@login and (@scenario1 or @scenario2)" && npx playwright test`
+
+which provides a much more coventional test selection experience than Playwright's grep command line parameter.
+
+In addition, the generated files are pruned to only include the sceanrios and outline examples that match the requested tags.
+
 > Inspired by the issue in Playwright repo [microsoft/playwright#11975](https://github.com/microsoft/playwright/issues/11975)
 
 ## Contents
