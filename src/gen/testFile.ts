@@ -55,7 +55,7 @@ export class TestFile {
 
   constructor(
     private options: TestFileOptions,         
-    private tagsExpr: sring
+    private tagsExpr: string
   ) 
   { 
     this.tagsExpr = tagsExpr?.trim() || ""
