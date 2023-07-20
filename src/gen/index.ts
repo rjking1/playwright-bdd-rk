@@ -43,7 +43,7 @@ function buildFiles(
 ) {
   const files: TestFile[] = [];
   features.forEach((pickles, doc) => {
-    const file = new testFile_1.TestFile({
+    const file = new TestFile({
       doc,
       pickles,
       supportCodeLibrary,
