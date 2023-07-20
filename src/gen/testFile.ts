@@ -53,7 +53,13 @@ export class TestFile {
   public customTest?: TestTypeCommon;
   public undefinedSteps: UndefinedStep[] = [];
 
-  constructor(private options: TestFileOptions) {}
+  constructor(
+    private options: TestFileOptions,         
+    private tagsExpr: sring
+  ) 
+  { 
+    this.tagsExpr = tagsExpr?.trim() || ""
+  }
 
   get sourceFile() {
     const { uri } = this.options.doc;
@@ -139,6 +145,41 @@ export class TestFile {
     return this.getSuite(feature);
   }
 
+  private tagsMatch(id: string, tags: string[]) {
+    // console.log(id);
+    if (tags.length === 0 || this.tagsExpr.length === 0) {
+        return true;
+    }
+
+    let expr = this.tagsExpr;
+
+    let replaceCount = 0;
+    // sort longest to shortest to plug in eg @2002.1 before @2002
+    tags.sort((x, y) => y.length - x.length).forEach((tag) => {
+      expr = expr.replace(tag, () => {
+        replaceCount++;
+        return "true";
+      });
+    });
+
+    // console.log('   replacement count=', replaceCount);
+    // console.log('  expr1=', expr);
+
+    // set not @xxxx's to true as if they didn't exist
+    expr = expr.replace(/not\s+@\S+[^\s|\)]/g,  "true" ); 
+    // then set all remaining @xxxx's
+    // replace with true if we replaced all our tags, else false
+    expr = expr.replace(/@\S+[^\s|\)]/g, (replaceCount === tags.length) ? "true" : "false"); 
+
+    expr = expr.replace(/and/ig, "&&");
+    expr = expr.replace(/or/ig, "||");
+    expr = expr.replace(/not/ig, "!");
+
+    // console.log('  ', expr, " ->", eval(expr));
+
+    return eval(expr);
+  }
+
   /**
    * Generate test.describe suite for root Feature or Rule
    */
@@ -148,8 +189,11 @@ export class TestFile {
     const newParents = [...parents, feature];
     feature.children.forEach((child) => lines.push(...this.getSuiteChild(child, newParents)));
     // return formatter.suite(feature.name, lines, flags);
-    const tags = this.testFileTags.getTestTags(newParents, feature.tags).join(" ");
-    return formatter.suite(`${feature.name} ${tags}`, lines, flags);
+    const tags = this.testFileTags.getTestTags(newParents, feature.tags);
+    if (this.tagsMatch(feature.name, tags)) {
+      return formatter.suite(`${feature.name} ${tags.join(' ')}`, lines, flags);
+    }
+    return [];
   }
 
   private getSuiteChild(child: FeatureChild | RuleChild, parents: (Feature | Rule)[]) {
@@ -201,8 +245,11 @@ export class TestFile {
       });
     });
     // return formatter.suite(scenario.name, lines, flags);
-    const tags = this.testFileTags.getTestTags(newParents, scenario.tags).join(" ");
-    return formatter.suite(`${scenario.name} ${tags}`, lines, flags);
+    const tags = this.testFileTags.getTestTags(newParents, scenario.tags);
+    if (this.tagsMatch(scenario.name, tags)) { //  || lines.length > 0
+      return formatter.suite(`${scenario.name} ${tags.join(" ")}`, lines, flags);
+    }
+    return [];
   }
 
   /**
@@ -220,8 +267,11 @@ export class TestFile {
     this.testFileTags.registerTestTags(parents, title, examples.tags);
     const { fixtures, lines } = this.getSteps(scenario, exampleRow.id);
     // return formatter.test(title, fixtures, lines, flags);
-    const tags = this.testFileTags.getTestTags(parents, examples.tags).join(" ");
-    return formatter.test(`${title} ${tags}`, fixtures, lines, flags);
+    const tags = this.testFileTags.getTestTags(parents, examples.tags);
+    if (this.tagsMatch(title, tags)) {
+      return formatter.test(`${title} ${tags.join(" ")}`, fixtures, lines, flags);
+    }
+    return [];
 }
 
   /**
@@ -231,9 +281,12 @@ export class TestFile {
     this.testFileTags.registerTestTags(parents, scenario.name, scenario.tags);
     const flags = getFormatterFlags(scenario);
     const { fixtures, lines } = this.getSteps(scenario);
-    //return formatter.test(scenario.name, fixtures, lines, flags);
-    const tags = this.testFileTags.getTestTags(parents, scenario.tags).join(" ");
-    return formatter.test(`${scenario.name} ${tags}`, fixtures, lines, flags);
+    // return formatter.test(scenario.name, fixtures, lines, flags);
+    const tags = this.testFileTags.getTestTags(parents, scenario.tags);
+    if (this.tagsMatch(scenario.name, tags)) {
+      return formatter.test(`${scenario.name} ${tags.join(" ")}`, fixtures, lines, flags);
+    }
+    return [];
   }
 
   /**
