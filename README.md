@@ -12,9 +12,11 @@ With version 1.0.2 bddgen can be passed a logical expression of tags, for exampl
 
 `npx bddgen "@login and (@scenario1 or @scenario2)" && npx playwright test`
 
-which provides a much more coventional test selection experience than Playwright's grep command line parameter.
+and, or, not and parenthesis can be included in the tag expression.
 
-In addition, the generated files are pruned to only include the sceanrios and outline examples that match the requested tags.
+which provides a much more conventional means of specifying the tests to run than Playwright's grep command line parameter (which can still be used).
+
+In addition, the generated files are pruned to only include the features, scenarios and outline examples that match the bddgen tag expression.
 
 > Inspired by the issue in Playwright repo [microsoft/playwright#11975](https://github.com/microsoft/playwright/issues/11975)
 
