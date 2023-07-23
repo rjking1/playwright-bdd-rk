@@ -14,9 +14,9 @@ With version 1.0.2 bddgen can be passed a logical expression of tags, for exampl
 
 and, or, not and parenthesis can be included in the tag expression.
 
-which provides a much more conventional means of specifying the tests to run than Playwright's grep command line parameter (which can still be used).
+This provides a much more conventional means of specifying the tests to run than Playwright's grep command line parameter (which can still be used).
 
-In addition, the generated files are pruned to only include the features, scenarios and outline examples that match the bddgen tag expression.
+The generated files are pruned to only include the features, scenarios and outline examples that match the bddgen tag expression.
 
 > Inspired by the issue in Playwright repo [microsoft/playwright#11975](https://github.com/microsoft/playwright/issues/11975)
 
